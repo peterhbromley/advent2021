@@ -1,0 +1,42 @@
+from collections import defaultdict
+
+
+def read_input(filename):
+    with open(filename) as f:
+        graph = defaultdict(set)
+        for line in f.readlines():
+            v1, v2 = line.strip().split("-")
+            graph[v1].add(v2)
+            graph[v2].add(v1)
+
+        return graph
+
+
+def bfs(graph):
+    visited = []
+    to_visit = ["start"]
+    total_paths = 0
+    while to_visit:
+        to_visit.sort()
+        current = to_visit.pop(0)
+        neighbors = graph[current]
+
+        for neighbor in neighbors:
+            if neighbor == "end":
+                total_paths += 1
+            elif neighbor.isupper():
+                to_visit.append(neighbor)
+            else:
+                if neighbor not in to_visit + visited:
+                    to_visit.append(neighbor)
+
+        if not current.isupper():
+            visited.append(current)
+
+    return total_paths
+
+import pdb; pdb.set_trace()
+graph = read_input('input.txt')
+paths = bfs(graph)
+print(f"Problem 1: {paths}")
+
